@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtiQ | Smart AR Physiotherapy</title>
+    <meta name="description" content="ArtiQ Smart AR Physiotherapy — Real-time MediaPipe hand grip tracking and MyoWare 2.0 wireless EMG clinical rehabilitation platform.">
+    <link rel="canonical" href="/">
+    <meta property="og:title" content="ArtiQ | Smart AR Physiotherapy">
+    <meta property="og:description" content="Real-time AR hand grip rehabilitation and MyoWare 2.0 wireless EMG biofeedback dashboard.">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ArtiQ | Smart AR Physiotherapy">
+    <meta name="twitter:description" content="Real-time AR hand grip rehabilitation and MyoWare 2.0 wireless EMG biofeedback dashboard.">
+    <meta name="twitter:image" content="logo.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="logo.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "ArtiQ Smart AR Physiotherapy",
+      "description": "Real-time AR hand rehabilitation and wireless EMG telemetry dashboard.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ArtiQ Smart AR Physiotherapy",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/logo.png"
+        }
+      }
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] }, colors: { appleBlue: '#0A84FF', appleGreen: '#32D74B', appleRed: '#FF453A' } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css?v=7.0">
+</head>
+<body class="overflow-hidden bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-500 font-sans">
+    <div id="toastContainer" class="fixed top-8 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col gap-3 pointer-events-none w-full items-center"></div>
+
+    <!-- LIQUID GLASS MOBILE BLOCKER OVERLAY (<= 900px) -->
+    <div id="mobileBlocker" class="mobile-blocker fixed inset-0 z-[99998] items-center justify-center p-6 bg-gray-100 dark:bg-[#050505]">
+        <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-appleBlue/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-appleGreen/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="liquid-glass p-8 max-w-sm w-full text-center relative z-10 flex flex-col items-center gap-4">
+            <div class="w-16 h-16 bg-[#111113] dark:bg-white/10 rounded-2xl flex items-center justify-center shadow-inner border border-black/10 dark:border-white/20 backdrop-blur-md">
+                <img src="logo.png" alt="ArtiQ Smart AR Physiotherapy Logo" class="w-11 h-11 object-contain">
+            </div>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Desktop Webcam Required</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                ArtiQ Smart AR Physiotherapy is optimized for desktop and laptop webcams (minimum 900px screen width) to ensure accurate MediaPipe hand tracking and live EMG telemetry.
+            </p>
+            <div class="w-full pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                <span>&copy; <span class="dynamic-year"></span> ArtiQ</span>
+                <a href="/privacy.html" class="text-appleBlue hover:underline font-semibold">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 1: APPLE LUXURY LOGIN WALL -->
+    <div id="loginView" class="fixed inset-0 z-[9999] flex flex-col justify-between bg-gray-100 dark:bg-[#050505] transition-colors duration-700">
+        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-appleBlue/10 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-appleGreen/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="w-full px-8 pt-6 flex justify-end items-center z-[9999] pointer-events-auto">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest drop-shadow-md">Theme</span>
+                <button onclick="toggleGlobalTheme()" aria-label="Toggle Light or Dark Theme" class="w-14 h-8 rounded-full liquid-glass flex items-center transition-all duration-300 p-1 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 shadow-inner">
+                    <div id="iosThemeKnob" class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-6"></div>
+                </button>
+            </div>
+        </div>
+        
+        <main class="flex-1 flex items-center justify-center px-4">
+            <div class="liquid-glass p-8 w-[400px] z-50 flex flex-col relative transform scale-95 transition-all duration-700 pointer-events-auto" id="loginModalBox">
+                <div class="flex justify-center mb-5 z-10 pointer-events-none">
+                    <div class="w-16 h-16 bg-[#111113] dark:bg-white/10 rounded-2xl flex items-center justify-center shadow-inner border border-black/10 dark:border-white/20 backdrop-blur-md">
+                        <img src="logo.png" alt="ArtiQ Logo" class="w-11 h-11 object-contain">
+                    </div>
+                </div>
+                <h1 id="authTitle" class="text-2xl font-bold text-center text-gray-900 dark:text-white tracking-tight z-10 pointer-events-none">Sign In</h1>
+                <p id="authSubtitle" class="text-[10px] font-bold text-center text-gray-500 dark:text-gray-400 mb-6 z-10 uppercase tracking-widest pointer-events-none">Admin Clinical Access</p>
+
+                <!-- Login Form (Enter key enabled) -->
+                <div id="loginForm" class="space-y-4 relative z-20">
+                    <div>
+                        <input type="text" id="loginUsername" placeholder="Admin Username" style="pointer-events: auto !important; user-select: text !important;" class="w-full bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue transition-colors placeholder-gray-500 dark:placeholder-gray-600 font-medium">
+                    </div>
+                    <div>
+                        <input type="password" id="loginPassword" placeholder="Password" onkeydown="if(event.key === 'Enter') submitLogin()" style="pointer-events: auto !important; user-select: text !important;" class="w-full bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue transition-colors placeholder-gray-500 dark:placeholder-gray-600 font-medium">
+                    </div>
+                    <button onclick="submitLogin()" style="pointer-events: auto !important;" class="w-full liquid-btn py-3 rounded-xl text-sm font-bold text-appleBlue dark:text-white bg-appleBlue/10 dark:bg-appleBlue/20 hover:bg-appleBlue/20 dark:hover:bg-appleBlue/40 border border-appleBlue/20 dark:border-appleBlue/30 mt-2 transition-colors">Unlock System</button>
+                    <div class="flex justify-between items-center pt-2 text-[11px] font-bold text-gray-500">
+                        <span class="cursor-pointer hover:text-appleBlue dark:hover:text-white transition-colors" style="pointer-events: auto !important;" onclick="toggleAuth('register')">CREATE ADMIN ACCOUNT</span>
+                        <span class="cursor-pointer hover:text-appleBlue dark:hover:text-white transition-colors" style="pointer-events: auto !important;" onclick="toggleAuth('forgot')">FORGOT PASSWORD?</span>
+                    </div>
+                </div>
+
+                <!-- Register & OTP Form (Enter key enabled) -->
+                <div id="registerForm" class="space-y-4 relative z-20 hidden">
+                    <div><input type="text" id="regUsername" placeholder="Choose Username" style="pointer-events: auto !important; user-select: text !important;" class="w-full bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium placeholder-gray-500 dark:placeholder-gray-600"></div>
+                    <div class="flex gap-2">
+                        <input type="email" id="regEmail" placeholder="Email" style="pointer-events: auto !important; user-select: text !important;" class="w-2/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium placeholder-gray-500 dark:placeholder-gray-600">
+                        <button onclick="requestOTP()" style="pointer-events: auto !important;" class="w-1/3 liquid-btn text-[10px] font-bold text-appleBlue dark:text-appleBlue hover:text-blue-600 dark:hover:text-white transition-colors">GET OTP</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="regOTP" placeholder="6-Digit OTP" style="pointer-events: auto !important; user-select: text !important;" class="w-1/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium text-center tracking-widest placeholder-gray-500 dark:placeholder-gray-600">
+                        <input type="password" id="regPassword" placeholder="New Password" onkeydown="if(event.key === 'Enter') submitRegister()" style="pointer-events: auto !important; user-select: text !important;" class="w-2/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium placeholder-gray-500 dark:placeholder-gray-600">
+                    </div>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 px-1">Min. 8 chars with uppercase, lowercase, number, and symbol.</p>
+                    <button onclick="submitRegister()" style="pointer-events: auto !important;" class="w-full liquid-btn py-3 rounded-xl text-sm font-bold text-appleGreen dark:text-white bg-appleGreen/10 dark:bg-appleGreen/20 hover:bg-appleGreen/20 dark:hover:bg-appleGreen/40 border border-appleGreen/20 dark:border-appleGreen/30 mt-2 transition-colors">Verify & Register</button>
+                    <p class="text-[11px] font-bold text-center text-gray-500 mt-4 cursor-pointer hover:text-appleBlue dark:hover:text-white transition-colors" style="pointer-events: auto !important;" onclick="toggleAuth('login')">BACK TO LOGIN</p>
+                </div>
+
+                <!-- Forgot Password & Reset OTP Form -->
+                <div id="forgotForm" class="space-y-4 relative z-20 hidden">
+                    <div class="flex gap-2">
+                        <input type="email" id="forgotEmail" placeholder="Registered Email" style="pointer-events: auto !important; user-select: text !important;" class="w-2/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium placeholder-gray-500 dark:placeholder-gray-600">
+                        <button onclick="requestResetOTP()" style="pointer-events: auto !important;" class="w-1/3 liquid-btn text-[10px] font-bold text-appleBlue dark:text-appleBlue hover:text-blue-600 dark:hover:text-white transition-colors">SEND CODE</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="forgotOTP" placeholder="6-Digit OTP" style="pointer-events: auto !important; user-select: text !important;" class="w-1/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium text-center tracking-widest placeholder-gray-500 dark:placeholder-gray-600">
+                        <input type="password" id="forgotNewPassword" placeholder="New Password" onkeydown="if(event.key === 'Enter') submitForgotPassword()" style="pointer-events: auto !important; user-select: text !important;" class="w-2/3 bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue font-medium placeholder-gray-500 dark:placeholder-gray-600">
+                    </div>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 px-1">Min. 8 chars with uppercase, lowercase, number, and symbol.</p>
+                    <button onclick="submitForgotPassword()" style="pointer-events: auto !important;" class="w-full liquid-btn py-3 rounded-xl text-sm font-bold text-appleBlue dark:text-white bg-appleBlue/10 dark:bg-appleBlue/20 hover:bg-appleBlue/20 dark:hover:bg-appleBlue/40 border border-appleBlue/20 dark:border-appleBlue/30 mt-2 transition-colors">Reset Password</button>
+                    <p class="text-[11px] font-bold text-center text-gray-500 mt-4 cursor-pointer hover:text-appleBlue dark:hover:text-white transition-colors" style="pointer-events: auto !important;" onclick="toggleAuth('login')">BACK TO LOGIN</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Edge-Pinned Footer -->
+        <footer class="w-full py-4 px-8 border-t border-black/5 dark:border-white/10 text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between z-20 pointer-events-auto">
+            <span>&copy; <span id="copyrightYear" class="dynamic-year"></span> ArtiQ Smart AR Physiotherapy. All rights reserved.</span>
+            <div class="flex items-center gap-5">
+                <a href="/privacy.html" class="hover:text-appleBlue transition-colors font-medium">Privacy Policy</a>
+                <a href="/sitemap.xml" class="hover:text-appleBlue transition-colors font-medium">Sitemap</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- VIEW 2: AR DASHBOARD -->
+    <div id="dashboardView" class="relative w-full h-screen hidden opacity-0 transition-opacity duration-1000">
+        <video id="webcam" autoplay playsinline hidden></video>
+        <canvas id="output_canvas" class="absolute inset-0 w-full h-full object-cover z-0"></canvas>
+        
+        <div class="relative z-10 w-full h-screen pointer-events-none p-6 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col gap-3">
+                    <div class="liquid-glass p-5 pointer-events-auto flex gap-6 items-center fluid-hover cursor-default">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-extrabold tracking-wider text-gray-800 dark:text-gray-100 uppercase drop-shadow-sm">Grip Reps</span>
+                            <span id="repCounter" class="text-5xl font-light tracking-tighter text-gray-900 dark:text-white">0</span>
+                        </div>
+                        <div class="h-10 w-px bg-gray-400 dark:bg-gray-500 opacity-40"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-extrabold tracking-wider text-gray-800 dark:text-gray-100 uppercase drop-shadow-sm">Form</span>
+                            <span id="gripStatus" class="text-lg font-bold text-appleBlue transition-all">OPEN</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openModal('patientContainer')" class="liquid-btn px-4 py-2 pointer-events-auto fluid-hover flex items-center gap-2 w-max">
+                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span id="patientText" class="text-[12px] font-bold text-gray-800 dark:text-gray-200">Patient: Unknown</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 pointer-events-auto">
+                    <div class="liquid-glass px-5 py-2 fluid-hover flex items-center gap-3 cursor-default">
+                        <span id="currentDate" class="text-[12px] font-bold text-gray-800 dark:text-gray-200 drop-shadow-sm"></span>
+                        <div class="h-4 w-px bg-gray-400 dark:bg-gray-500 opacity-40"></div>
+                        <span id="currentTime" class="text-[14px] font-bold text-gray-900 dark:text-white tracking-wide drop-shadow-sm"></span>
+                    </div>
+                    
+                    <button id="openHistoryBtn" class="liquid-btn p-3 rounded-full flex items-center justify-center fluid-hover" title="Session Logs">
+                        <svg class="w-5 h-5 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                    
+                    <button id="openSettingsBtn" class="liquid-btn p-3 rounded-full flex items-center justify-center fluid-hover" title="Settings">
+                        <svg class="w-5 h-5 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-auto z-20">
+                <button id="sessionToggleBtn" class="liquid-glass px-8 py-4 rounded-full fluid-hover flex items-center gap-3 transition-all">
+                    <div id="sessionIndicator" class="w-3 h-3 rounded-full bg-appleGreen shadow-[0_0_8px_#34C759]"></div>
+                    <span id="sessionText" class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Start Session</span>
+                </button>
+            </div>
+            
+            <div class="flex justify-between items-end">
+                <div class="liquid-glass p-6 pointer-events-auto w-[420px] fluid-hover cursor-default">
+                    <!-- EMG Graph Header -->
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[12px] font-extrabold tracking-widest text-gray-800 dark:text-gray-100 uppercase drop-shadow-sm">Muscle Activation</span>
+                            <!-- ESP32 LWT Status Indicator -->
+                            <span id="emgNodeDot" class="flex h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-600 shadow-sm transition-all duration-300"></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="mqttPublishCommand('calibrate')" style="pointer-events: auto;" class="bg-appleRed/10 text-appleRed border border-appleRed/30 px-3 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-appleRed/20 transition-colors shadow-sm">Calibrate</button>
+                            <button onclick="mqttPublishCommand('reset')" style="pointer-events: auto;" class="bg-appleBlue/10 text-appleBlue border border-appleBlue/30 px-3 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-appleBlue/20 transition-colors shadow-sm">Reset</button>
+                        </div>
+                    </div>
+                    <div class="w-full h-32 mb-4 bg-black/10 dark:bg-white/10 rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden relative"><canvas id="emgGraph" class="absolute inset-0 w-full h-full"></canvas></div>
+                    <!-- Telemetry Values -->
+                    <div class="flex justify-between items-end">
+                        <div class="flex flex-col"><span class="text-[10px] font-extrabold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-1 drop-shadow-sm">Current MVC</span><span id="mockMvc" class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter drop-shadow-md">0%</span></div>
+                        <div class="flex gap-4 text-sm font-medium text-gray-800 dark:text-gray-200">
+                            <span class="bg-white/60 dark:bg-black/50 px-3 py-1 rounded-lg border border-black/10 dark:border-white/10 shadow-sm drop-shadow-sm">Raw: <span id="mockBaseline" class="text-gray-900 dark:text-white font-extrabold">0</span></span>
+                            <span class="bg-white/60 dark:bg-black/50 px-3 py-1 rounded-lg border border-black/10 dark:border-white/10 shadow-sm drop-shadow-sm">MVC: <span id="mockPeak" class="text-gray-900 dark:text-white font-extrabold">Not Set</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="liquid-glass p-3 pointer-events-auto w-80 fluid-hover cursor-default">
+                    <div class="flex justify-between items-center mb-2 px-2"><span class="text-[11px] font-extrabold tracking-wider text-gray-800 dark:text-gray-100 uppercase drop-shadow-sm">Target Form</span></div>
+                    <div class="relative rounded-xl overflow-hidden bg-black/10 dark:bg-black/40 border border-black/10 dark:border-white/10"><video id="guideVideo" src="guide.mp4" loop muted playsinline hidden></video><canvas id="chromaCanvas" width="320" height="240" class="w-full h-auto"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="fixed inset-0 z-[250] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        
+        <!-- Patient Setup Modal -->
+        <div id="patientContainer" class="liquid-glass-modal w-80 absolute transform scale-95 opacity-0 transition-all duration-300 flex flex-col pointer-events-none z-10">
+            <div class="flex items-center px-4 py-3 border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 rounded-t-[26px]">
+                <div class="flex gap-2 w-16">
+                    <button onclick="closeModal('patientContainer')" class="w-3 h-3 rounded-full bg-[#FF5F56] hover:brightness-110 transition-all"></button>
+                    <div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+                </div>
+                <h3 class="flex-1 text-center text-[13px] font-extrabold text-gray-900 dark:text-white pr-16 tracking-wide">Active Patient</h3>
+            </div>
+            <div class="p-6 space-y-5 bg-white/50 dark:bg-black/50 rounded-b-[26px]">
+                <div>
+                    <label class="text-[11px] font-extrabold text-gray-700 dark:text-gray-400 uppercase px-1 tracking-widest drop-shadow-sm">Patient Name</label>
+                    <input type="text" id="patientName" placeholder="e.g. Patient Full Name" style="user-select: text !important;" class="w-full mt-1 bg-white dark:bg-black/80 border border-black/20 dark:border-white/20 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue shadow-inner transition-all placeholder-gray-400 dark:placeholder-gray-600">
+                </div>
+                <div>
+                    <label class="text-[11px] font-extrabold text-gray-700 dark:text-gray-400 uppercase px-1 tracking-widest drop-shadow-sm">Patient Age</label>
+                    <input type="number" id="patientAge" placeholder="e.g. 45" style="user-select: text !important;" class="w-full mt-1 bg-white dark:bg-black/80 border border-black/20 dark:border-white/20 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-appleBlue shadow-inner transition-all placeholder-gray-400 dark:placeholder-gray-600">
+                </div>
+                <button onclick="savePatient()" class="w-full liquid-btn py-3 rounded-xl text-sm font-bold text-appleBlue dark:text-white bg-appleBlue/10 dark:bg-appleBlue/20 hover:bg-appleBlue/20 dark:hover:bg-appleBlue/40 border border-appleBlue/20 dark:border-appleBlue/30 mt-2 transition-all shadow-sm">Set For Session</button>
+            </div>
+        </div>
+        
+        <!-- History Modal -->
+        <div id="historyContainer" class="liquid-glass-modal w-[720px] max-h-[85vh] absolute transform scale-95 opacity-0 transition-all duration-300 flex flex-col pointer-events-none z-10">
+            <div class="flex items-center px-5 py-4 border-b border-black/10 dark:border-white/10 bg-white/40 dark:bg-black/40 rounded-t-[26px]">
+                <div class="flex gap-2 w-16"><button onclick="closeModal('historyContainer')" class="w-3.5 h-3.5 rounded-full bg-[#FF5F56] hover:brightness-110 transition-all"></button><div class="w-3.5 h-3.5 rounded-full bg-[#FFBD2E]"></div><div class="w-3.5 h-3.5 rounded-full bg-[#27C93F]"></div></div>
+                <h3 class="flex-1 text-center text-[14px] font-bold tracking-wide text-gray-800 dark:text-gray-200 pr-16">Admin Session Logs</h3>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-3" id="historyList"></div>
+        </div>
+
+        <!-- Settings Modal (Theme, Reset, Logout) -->
+        <div id="settingsContainer" class="liquid-glass-modal w-80 absolute transform scale-95 opacity-0 transition-all duration-300 flex flex-col pointer-events-none z-10">
+            <div class="flex items-center px-4 py-3 border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 rounded-t-[26px]">
+                <div class="flex gap-2 w-16">
+                    <button onclick="closeModal('settingsContainer')" class="w-3 h-3 rounded-full bg-[#FF5F56] hover:brightness-110 transition-all"></button>
+                    <div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+                </div>
+                <h3 class="flex-1 text-center text-[13px] font-extrabold text-gray-900 dark:text-white pr-16 tracking-wide">System Settings</h3>
+            </div>
+            <div class="p-6 space-y-6 bg-white/50 dark:bg-black/50 rounded-b-[26px]">
+                
+                <div>
+                    <span class="text-[11px] font-bold text-gray-500 uppercase block mb-2 px-1">EMG Hardware Node</span>
+                    <div class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" id="inputMacAddress" placeholder="Node MAC (e.g. A1B2C3D4)" style="user-select: text !important;" class="w-2/3 bg-white dark:bg-black/80 border border-black/20 dark:border-white/20 focus:border-appleBlue rounded-xl px-4 py-3 outline-none font-mono text-sm uppercase text-gray-900 dark:text-white transition-all placeholder-gray-400 dark:placeholder-gray-600">
+                            <button onclick="saveMacAddress()" class="w-1/3 liquid-btn text-[11px] font-bold text-appleBlue hover:text-white transition-colors border border-black/20 dark:border-white/20 shadow-sm">LINK NODE</button>
+                        </div>
+                        <div class="bg-white dark:bg-black/80 p-3 rounded-xl border border-black/20 dark:border-white/20 flex justify-between items-center shadow-inner">
+                            <div class="flex flex-col">
+                                <span id="nodeMacAddress" class="text-xs font-bold text-gray-900 dark:text-white font-mono">Waiting for node...</span>
+                                <span id="nodeStatusText" class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mt-0.5">OFFLINE</span>
+                            </div>
+                            <div id="nodeStatusIcon" class="w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-[11px] font-bold text-gray-500 uppercase block mb-2 px-1">Appearance</span>
+                    <div class="flex bg-black/10 dark:bg-black/50 p-1 rounded-xl shadow-inner relative">
+                        <button id="themeLight" class="flex-1 py-1.5 text-sm font-medium z-10 transition-colors rounded-lg text-black bg-white shadow-sm dark:bg-transparent dark:text-gray-400 dark:shadow-none" onclick="setTheme(false)">Light</button>
+                        <button id="themeDark" class="flex-1 py-1.5 text-sm font-medium z-10 transition-colors rounded-lg text-gray-500 bg-transparent shadow-none dark:bg-[#3A3A3C] dark:text-white dark:shadow-sm" onclick="setTheme(true)">Dark</button>
+                    </div>
+                </div>
+                <div class="space-y-3 mt-4">
+                    <button id="resetBtn" class="w-full liquid-btn py-2.5 rounded-xl text-sm font-bold text-appleBlue hover:text-blue-500 transition-colors border border-black/20 dark:border-white/20 shadow-sm">Reset Counter</button>
+                    <button onclick="logoutAdmin(); closeModal('settingsContainer');" class="w-full liquid-btn py-2.5 rounded-xl text-sm font-bold text-appleRed hover:text-red-500 transition-colors bg-red-500/10 border border-red-500/30 shadow-sm">Lock System (Logout)</button>
+                    <div class="pt-2 text-center">
+                        <a href="/privacy.html" class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 hover:text-appleBlue transition-colors">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="app.js?v=8.0"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+/* High-End Transparent Liquid Glass */
+.liquid-glass, .liquid-glass-modal {
+    /* 0.70 white opacity for high contrast background blur */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0.30) 100%);
+    backdrop-filter: blur(45px) saturate(200%);
+    -webkit-backdrop-filter: blur(45px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    border-radius: 28px; 
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Dark Mode Overrides */
+.dark .liquid-glass, .dark .liquid-glass-modal {
+    /* Darkened gradient for white text contrast */
+    background: linear-gradient(135deg, rgba(30, 30, 35, 0.65) 0%, rgba(10, 10, 15, 0.35) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Liquid Buttons */
+.liquid-btn {
+    /* Transparent glass styling for buttons */
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+    border-radius: 22px;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.liquid-btn:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.dark .liquid-btn {
+    background: rgba(60, 60, 65, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.dark .liquid-btn:active {
+    background: rgba(80, 80, 85, 0.6);
+}
+
+/* 
+ * Fluid Hover - Smooth scaling and glowing (No background color override)
+ */
+.fluid-hover {
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, filter 0.4s ease;
+}
+
+.fluid-hover:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,1);
+    filter: brightness(1.05);
+}
+
+.dark .fluid-hover:hover {
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.15);
+    filter: brightness(1.15);
+}
+
+/* Modal Animation Classes */
+.modal-active { opacity: 1 !important; pointer-events: auto !important; }
+.modal-scale { transform: scale(1) !important; opacity: 1 !important; }
+
+body { 
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale; 
+}
+
+input, textarea, button, select {
+    font-family: inherit;
+}
+
+input, textarea {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+}
+
+/* Desktop & Webcam Optimization: Liquid Glass Mobile Blocker (<= 900px) */
+.mobile-blocker {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .mobile-blocker {
+        display: flex !important;
+    }
+    #loginView,
+    #dashboardView,
+    #modalOverlay {
+        display: none !important;
+    }
+}

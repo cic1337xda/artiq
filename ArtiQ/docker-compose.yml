@@ -1,0 +1,80 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: artiq_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: Asia/Kuala_Lumpur
+      PGTZ: Asia/Kuala_Lumpur
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - artiq_internal
+      - pwn20wnd-network
+
+  ar_engine:
+    build: ./backend
+    container_name: artiq_backend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:8000"
+    volumes:
+      - ./backend:/app
+      - ./frontend:/frontend
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Kuala_Lumpur
+      - DATABASE_URL=${DATABASE_URL}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - MQTT_BROKER=artiq_mqtt
+      - MQTT_PORT=1883
+    depends_on:
+      - db
+      - mosquitto
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - artiq_internal
+      - pwn20wnd-network
+    
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: artiq_mqtt
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kuala_Lumpur
+    ports:
+      - "1891:1883" # Nginx TCP stream endpoint
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - artiq_internal
+      - pwn20wnd-network
+
+volumes:
+  pgdata:
+
+networks:
+  artiq_internal:
+    driver: bridge
+  pwn20wnd-network:
+    external: true

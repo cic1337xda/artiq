@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+websockets
+mediapipe==0.10.21
+opencv-python-headless
+numpy
+aiofiles
+sqlalchemy
+psycopg2-binary
+passlib[bcrypt]
+bcrypt==4.0.1
+PyJWT
+slowapi
+resend
+paho-mqtt
+tzdata

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | ArtiQ Smart AR Physiotherapy</title>
+    <meta name="description" content="Privacy Policy for ArtiQ Smart AR Physiotherapy — detailing local Edge AI webcam processing, MyoWare 2.0 EMG telemetry, and administrator account protection.">
+    <link rel="canonical" href="/privacy.html">
+    <meta property="og:title" content="Privacy Policy | ArtiQ Smart AR Physiotherapy">
+    <meta property="og:description" content="Learn how ArtiQ safeguards administrator credentials, session records, and client-side webcam processing.">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="logo.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Dashboard", "item": "/" },
+        { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "/privacy.html" }
+      ]
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] }, colors: { appleBlue: '#0A84FF', appleGreen: '#32D74B', appleRed: '#FF453A' } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=7.0">
+</head>
+<body class="bg-gray-50 dark:bg-[#050505] text-gray-900 dark:text-gray-100 transition-colors duration-500 font-sans">
+    <div class="min-h-screen flex flex-col justify-between relative">
+        <div class="fixed top-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-appleBlue/10 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="fixed bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] bg-appleGreen/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <!-- Top Minimal Header -->
+        <header class="h-[68px] px-8 flex items-center justify-between border-b border-black/10 dark:border-white/10 backdrop-blur-md z-10">
+            <div class="flex items-center gap-4">
+                <a href="/" class="flex items-center gap-3 text-sm font-bold text-gray-900 dark:text-white hover:text-appleBlue transition-colors">
+                    <div class="w-9 h-9 bg-[#111113] dark:bg-white/10 rounded-xl flex items-center justify-center border border-black/10 dark:border-white/20 shrink-0">
+                        <img src="logo.png" alt="ArtiQ Logo" class="w-6 h-6 object-contain">
+                    </div>
+                    <span>ArtiQ</span>
+                </a>
+                <span class="text-gray-400 dark:text-gray-600">/</span>
+                <nav aria-label="Breadcrumb" class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                    <a href="/" class="hover:text-appleBlue transition-colors">Home</a>
+                    <span>/</span>
+                    <span class="text-gray-900 dark:text-white font-semibold">Privacy Policy</span>
+                </nav>
+            </div>
+            <a href="/" class="liquid-btn px-4 py-2 text-xs font-bold text-appleBlue dark:text-white hover:brightness-110 transition-all">
+                Back to App
+            </a>
+        </header>
+
+        <!-- Main Privacy Content -->
+        <main class="flex-1 flex items-center justify-center p-6 lg:p-10 z-10">
+            <article class="liquid-glass max-w-3xl w-full p-8 md:p-10 space-y-6">
+                <div class="flex items-center gap-4 border-b border-black/10 dark:border-white/10 pb-6">
+                    <div class="w-12 h-12 bg-[#111113] dark:bg-white/10 rounded-2xl flex items-center justify-center border border-black/10 dark:border-white/20 shrink-0">
+                        <img src="logo.png" alt="ArtiQ Smart AR Physiotherapy Logo" class="w-8 h-8 object-contain">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Privacy Policy</h1>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">ArtiQ Smart AR Physiotherapy &bull; Last Updated: November 2026</p>
+                    </div>
+                </div>
+
+                <section class="space-y-2">
+                    <h2 class="text-base font-bold text-gray-900 dark:text-white">1. Information We Collect</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        ArtiQ collects only the operational data necessary to manage physiotherapy sessions: administrator usernames, verified clinic email addresses for one-time password (OTP) authentication, patient session labels (display name, age, repetition counts, and timestamps), and linked ESP32 hardware MAC addresses.
+                    </p>
+                </section>
+
+                <section class="space-y-2">
+                    <h2 class="text-base font-bold text-gray-900 dark:text-white">2. Local Edge AI Webcam Processing</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        All MediaPipe hand landmark tracking and grip form evaluations run 100% locally inside your browser on your desktop or laptop. No video streams, camera frames, or facial/hand images are recorded, uploaded, or stored on any server.
+                    </p>
+                </section>
+
+                <section class="space-y-2">
+                    <h2 class="text-base font-bold text-gray-900 dark:text-white">3. EMG Hardware Telemetry</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        Live muscle activation metrics (%MVC, smoothed envelope readings, and calibration state) from the MyoWare 2.0 ESP32 node are transmitted over MQTT strictly for real-time biofeedback visualization during active clinical sessions.
+                    </p>
+                </section>
+
+                <section class="space-y-2">
+                    <h2 class="text-base font-bold text-gray-900 dark:text-white">4. Security &amp; Access Controls</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        Administrator passwords are hashed with Bcrypt, authentication sessions rely on signed <code class="text-xs font-mono px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10">HttpOnly</code> <code class="text-xs font-mono px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10">SameSite=Lax</code> JWT cookies, and all email verification codes expire after 10 minutes with single-use enforcement.
+                    </p>
+                </section>
+            </article>
+        </main>
+
+        <!-- Edge-Pinned Footer -->
+        <footer class="py-4 px-8 border-t border-black/10 dark:border-white/10 text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between flex-wrap gap-2 z-10">
+            <span>&copy; <span id="year"></span> ArtiQ Smart AR Physiotherapy. All rights reserved.</span>
+            <div class="flex items-center gap-5">
+                <a href="/privacy.html" class="text-appleBlue font-semibold hover:underline">Privacy Policy</a>
+                <a href="/" class="hover:text-appleBlue transition-colors">Sign In</a>
+                <a href="/sitemap.xml" class="hover:text-appleBlue transition-colors">Sitemap</a>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

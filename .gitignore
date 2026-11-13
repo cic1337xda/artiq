@@ -1,0 +1,45 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+.python-version
+
+# Pre-Production & Private Firmware Builds
+Esp32 Code/
+Pre-production Code/
+test_*.py
+*.sock
+
+# Database & Persistent Storage
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment Variables & Secrets (Keep .env.example)
+.env
+*.env
+.env.local
+.env.*.local
+resendapi.txt
+resendapikey.txt
+
+# Session Logs & Work Artifacts
+ocsession.txt
+ocsession*.txt
+*.log
+
+# Docker, IDE & OS Artifacts
+docker-compose.override.yml
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

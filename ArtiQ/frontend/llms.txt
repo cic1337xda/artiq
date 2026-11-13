@@ -1,0 +1,13 @@
+# ArtiQ Smart AR Physiotherapy
+
+> Real-time augmented reality hand grip rehabilitation and MyoWare 2.0 wireless EMG clinical telemetry platform.
+
+## Overview
+ArtiQ combines client-side MediaPipe Hands computer vision with ESP32 MyoWare 2.0 surface electromyography (EMG) biofeedback over MQTT to guide physiotherapy grip exercises and log clinical repetition sessions.
+
+## Public Routes
+- `/`: Clinical authentication wall and desktop webcam AR rehabilitation dashboard (requires desktop viewport >= 900px).
+- `/privacy.html`: Privacy policy covering administrator OTP verification, local Edge AI webcam processing, and EMG session data.
+
+## API Health
+- `/api/v1/health`: Service and PostgreSQL database health check endpoint.
